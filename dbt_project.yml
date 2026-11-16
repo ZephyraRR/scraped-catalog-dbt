@@ -1,0 +1,26 @@
+name: scraped_catalog
+version: "1.0.0"
+config-version: 2
+profile: scraped_catalog
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+clean-targets: ["target", "dbt_packages"]
+
+seeds:
+  scraped_catalog:
+    raw_books:
+      +column_types:
+        price_gbp: decimal(8,2)
+        rating: integer
+        in_stock: boolean
+        scraped_on: date
+
+models:
+  scraped_catalog:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

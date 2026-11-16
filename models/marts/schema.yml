@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: dim_categories
+    description: One row per scraped category with its book count and scrape dates.
+    columns:
+      - name: category
+        data_tests:
+          - unique
+          - not_null
+      - name: books
+        data_tests:
+          - positive_value
+
+  - name: fct_books
+    description: One row per book with a price band and a highly-rated flag.
+    columns:
+      - name: book_id
+        data_tests:
+          - unique
+          - not_null
+      - name: category
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_categories')
+                field: category
+      - name: price_band
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['budget', 'standard', 'premium']
+      - name: price_gbp
+        data_tests:
+          - positive_value
+
+  - name: mart_category_price_stats
+    description: Price and rating summary per category.
+    columns:
+      - name: category
+        data_tests:
+          - unique
+          - not_null
+      - name: avg_rating
+        data_tests:
+          - not_null
+
+  - name: mart_rating_distribution
+    description: How many books carry each star rating, with the share of the catalogue.
+    columns:
+      - name: rating
+        data_tests:
+          - unique
+          - not_null

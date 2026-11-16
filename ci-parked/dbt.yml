@@ -1,0 +1,21 @@
+# Parked: move to .github/workflows/dbt.yml once GitHub Actions works on the account (it is locked by a billing issue).
+# Until a run of this workflow is green on GitHub, the README must not claim CI.
+name: dbt
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: dbt build --profiles-dir . --project-dir .
+      - run: pytest -q pytest_tests

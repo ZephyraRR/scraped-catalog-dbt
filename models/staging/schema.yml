@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: stg_books
+    description: One row per scraped book, typed and trimmed. Key is the md5 of the product URL.
+    columns:
+      - name: book_id
+        description: md5 of the product URL (the scraper already de-duplicates by URL).
+        data_tests:
+          - unique
+          - not_null
+      - name: category
+        data_tests:
+          - not_null
+      - name: title
+        data_tests:
+          - not_null
+      - name: price_gbp
+        description: Price in GBP as shown on the site.
+        data_tests:
+          - not_null
+          - positive_value
+      - name: rating
+        description: Star rating, 1 to 5.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3, 4, 5]
+      - name: in_stock
+        data_tests:
+          - not_null
+      - name: url
+        data_tests:
+          - not_null
+          - unique
